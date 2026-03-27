@@ -35,6 +35,9 @@ export function createEmptyVault(): VaultData {
       currentInvestments: 0,
       monthlyContribution: 0,
       annualReturn: 7,
+      targetYears: 20,
+      inflationRate: 3,
+      withdrawalRate: 4,
     },
   }
 }

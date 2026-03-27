@@ -69,6 +69,9 @@ export interface FireInputs {
   currentInvestments: number
   monthlyContribution: number
   annualReturn: number
+  targetYears: number
+  inflationRate: number
+  withdrawalRate: number
 }
 
 export interface VaultData {
