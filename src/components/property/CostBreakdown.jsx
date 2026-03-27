@@ -84,7 +84,7 @@ export default function CostBreakdown({ property }) {
             <Row label="Total Operating Costs" monthly={-totalCosts / 12} annual={-totalCosts} bold color="red" />
 
             <tr><td colSpan={3} className="pt-4 pb-1 text-xs text-text-muted uppercase tracking-wider">Mortgage</td></tr>
-            <Row label={`${mortgage.type === 'interest-only' ? 'Interest Only' : 'Repayment'} @ ${mortgage.currentRate}%`} monthly={-monthlyMortgage} annual={-annualMortgage} indent />
+            <Row label={`${mortgage.type === 'interest-only' ? 'Interest Only' : 'Repayment'} @ ${mortgage.currentRate}%`} monthly={-monthlyMortgage} annual={-annualMortgage} bold color="red" indent />
 
             <tr className="border-t-2 border-border">
               <td colSpan={3} className="pt-3" />
