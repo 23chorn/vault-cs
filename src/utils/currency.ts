@@ -34,15 +34,15 @@ export function convertCurrency(
 ): number {
   if (from === to) return amount
   const inAED = currencyToAED(amount, from, rates)
-  return Math.round(aedToCurrency(inAED, to, rates))
+  return aedToCurrency(inAED, to, rates)
 }
 
 export function toAED(amount: number, currency: Currency, rates: FxRates): number {
-  return Math.round(currencyToAED(amount, currency, rates))
+  return currencyToAED(amount, currency, rates)
 }
 
 export function fromAED(amount: number, currency: Currency, rates: FxRates): number {
-  return Math.round(aedToCurrency(amount, currency, rates))
+  return aedToCurrency(amount, currency, rates)
 }
 
 /** Format an AED amount in the given display currency */
