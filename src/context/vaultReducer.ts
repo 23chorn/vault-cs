@@ -78,16 +78,50 @@ export function vaultReducer(state: VaultData, action: VaultAction): VaultData {
         },
       }
 
-    case 'ADD_POT':
-      return { ...state, savingsPots: [...state.savingsPots, action.payload] }
+    case 'ADD_POT': {
+      const newPot = action.payload
+      return {
+        ...state,
+        savingsPots: [...state.savingsPots, newPot],
+        goals: newPot.linkedGoalId
+          ? state.goals.map((g) =>
+              g.id === newPot.linkedGoalId && !g.linkedPotIds.includes(newPot.id)
+                ? { ...g, linkedPotIds: [...g.linkedPotIds, newPot.id] }
+                : g,
+            )
+          : state.goals,
+      }
+    }
 
-    case 'UPDATE_POT':
+    case 'UPDATE_POT': {
+      const pot = action.payload
+      const oldPot = state.savingsPots.find((p) => p.id === pot.id)
+      const oldGoalId = oldPot?.linkedGoalId
+      const newGoalId = pot.linkedGoalId
+
+      let goals = state.goals
+      if (oldGoalId !== newGoalId) {
+        goals = goals.map((g) => {
+          // Remove pot from old goal's linkedPotIds
+          if (g.id === oldGoalId && g.linkedPotIds.includes(pot.id)) {
+            return { ...g, linkedPotIds: g.linkedPotIds.filter((id) => id !== pot.id) }
+          }
+          // Add pot to new goal's linkedPotIds
+          if (g.id === newGoalId && !g.linkedPotIds.includes(pot.id)) {
+            return { ...g, linkedPotIds: [...g.linkedPotIds, pot.id] }
+          }
+          return g
+        })
+      }
+
       return {
         ...state,
         savingsPots: state.savingsPots.map((p) =>
-          p.id === action.payload.id ? action.payload : p,
+          p.id === pot.id ? pot : p,
         ),
+        goals,
       }
+    }
 
     case 'DELETE_POT':
       return {
@@ -109,16 +143,47 @@ export function vaultReducer(state: VaultData, action: VaultAction): VaultData {
         },
       }
 
-    case 'ADD_GOAL':
-      return { ...state, goals: [...state.goals, action.payload] }
+    case 'ADD_GOAL': {
+      const newGoal = action.payload
+      const potIds = new Set(newGoal.linkedPotIds)
+      return {
+        ...state,
+        goals: [...state.goals, newGoal],
+        savingsPots: potIds.size > 0
+          ? state.savingsPots.map((p) =>
+              potIds.has(p.id) ? { ...p, linkedGoalId: newGoal.id } : p,
+            )
+          : state.savingsPots,
+      }
+    }
 
-    case 'UPDATE_GOAL':
+    case 'UPDATE_GOAL': {
+      const goal = action.payload
+      const oldGoal = state.goals.find((g) => g.id === goal.id)
+      const oldPotIds = new Set(oldGoal?.linkedPotIds ?? [])
+      const newPotIds = new Set(goal.linkedPotIds)
+
+      // Sync pot.linkedGoalId for added/removed pots
+      const savingsPots = state.savingsPots.map((p) => {
+        const wasLinked = oldPotIds.has(p.id)
+        const nowLinked = newPotIds.has(p.id)
+        if (!wasLinked && nowLinked) {
+          return { ...p, linkedGoalId: goal.id }
+        }
+        if (wasLinked && !nowLinked && p.linkedGoalId === goal.id) {
+          return { ...p, linkedGoalId: null }
+        }
+        return p
+      })
+
       return {
         ...state,
         goals: state.goals.map((g) =>
-          g.id === action.payload.id ? action.payload : g,
+          g.id === goal.id ? goal : g,
         ),
+        savingsPots,
       }
+    }
 
     case 'DELETE_GOAL':
       return {
