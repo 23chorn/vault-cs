@@ -20,20 +20,18 @@ export default function Sidebar({ activeSection, onNavigate, propertyName }) {
 
   return (
     <>
-      {/* Mobile hamburger button */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="lg:hidden fixed top-3 left-3 z-50 bg-bg-surface border border-border rounded-lg p-2 text-text-primary"
-        aria-label="Toggle menu"
-      >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
-          {open ? (
-            <path d="M5 5l10 10M15 5L5 15" />
-          ) : (
+      {/* Mobile hamburger button — hidden when sidebar is open */}
+      {!open && (
+        <button
+          onClick={() => setOpen(true)}
+          className="lg:hidden fixed top-3 left-3 z-50 bg-bg-surface border border-border rounded-lg p-2 text-text-primary"
+          aria-label="Open menu"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M3 5h14M3 10h14M3 15h14" />
-          )}
-        </svg>
-      </button>
+          </svg>
+        </button>
+      )}
 
       {/* Backdrop on mobile */}
       {open && (
@@ -50,11 +48,22 @@ export default function Sidebar({ activeSection, onNavigate, propertyName }) {
         transform transition-transform duration-200 ease-out
         ${open ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
       `}>
-        <div className="p-5 border-b border-border">
-          <h1 className="text-sm font-semibold text-text-primary tracking-wide uppercase">
-            Property Portfolio
-          </h1>
-          <p className="text-xs text-text-muted mt-1">Analyser</p>
+        <div className="p-5 border-b border-border flex items-start justify-between">
+          <div>
+            <h1 className="text-sm font-semibold text-text-primary tracking-wide uppercase">
+              Property Portfolio
+            </h1>
+            <p className="text-xs text-text-muted mt-1">Analyser</p>
+          </div>
+          <button
+            onClick={() => setOpen(false)}
+            className="lg:hidden p-1 text-text-muted hover:text-text-primary"
+            aria-label="Close menu"
+          >
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M5 5l10 10M15 5L5 15" />
+            </svg>
+          </button>
         </div>
 
         {/* Property selector */}
@@ -84,7 +93,7 @@ export default function Sidebar({ activeSection, onNavigate, propertyName }) {
                   : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
               }`}
             >
-              <span className="text-base opacity-60">{item.icon}</span>
+              <span className="w-5 text-center text-base opacity-60 shrink-0">{item.icon}</span>
               {item.label}
             </button>
           ))}
