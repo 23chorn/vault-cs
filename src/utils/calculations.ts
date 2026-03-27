@@ -7,6 +7,11 @@ export function calcPersonMonthlyOutgoings(person: Person): number {
   return fixedTotal + person.monthlyVariableSpend + contributionTotal
 }
 
+export function calcPersonMonthlySpending(person: Person): number {
+  const fixedTotal = person.monthlyFixedExpenses.reduce((sum, e) => sum + e.amount, 0)
+  return fixedTotal + person.monthlyVariableSpend
+}
+
 export function calcPersonMonthlySurplus(person: Person): number {
   return person.monthlySalaryNet - calcPersonMonthlyOutgoings(person)
 }

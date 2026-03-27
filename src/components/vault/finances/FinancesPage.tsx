@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useVault } from '../../../hooks/useVault.ts'
 import { Card } from '../../shared/Card.tsx'
 import { formatCurrency, toAED, fromAED, formatInDisplayCurrency } from '../../../utils/currency.ts'
-import { calcPersonMonthlySurplus, calcPersonMonthlyOutgoings } from '../../../utils/calculations.ts'
+import { calcPersonMonthlySurplus, calcPersonMonthlyOutgoings, calcPersonMonthlySpending } from '../../../utils/calculations.ts'
 import { PersonHeader, PersonIncome, PersonExpenses, PersonVariableSpend } from './PersonColumn.tsx'
 import { NumberInput } from '../../shared/NumberInput.tsx'
 import { fetchLiveRates } from '../../../utils/fetchRates.ts'
@@ -106,6 +106,7 @@ export function FinancesPage() {
   const p2Surplus = calcPersonMonthlySurplus(p2)
   const totalIncome = p1.monthlySalaryNet + p2.monthlySalaryNet
   const totalOutgoings = calcPersonMonthlyOutgoings(p1) + calcPersonMonthlyOutgoings(p2)
+  const totalSpending = calcPersonMonthlySpending(p1) + calcPersonMonthlySpending(p2)
   const totalSurplus = p1Surplus + p2Surplus
 
   const toDisplay = (aed: number) => fromAED(aed, dc, rates)
@@ -129,20 +130,58 @@ export function FinancesPage() {
   const outgoingsTotal = totalOutgoings
   const pctOf = (amount: number, total: number) => total > 0 ? Math.round((amount / total) * 1000) / 10 : 0
 
-  const incomeRow: Record<string, any> = { category: 'Income', income1: pctOf(p1.monthlySalaryNet, incomeTotal), income2: pctOf(p2.monthlySalaryNet, incomeTotal), variable: 0, contributions: 0, _income1: Math.round(toDisplay(p1.monthlySalaryNet)), _income2: Math.round(toDisplay(p2.monthlySalaryNet)) }
-  const outgoingsRow: Record<string, any> = { category: 'Outgoings', income1: 0, income2: 0, variable: pctOf(variableSpend, outgoingsTotal), contributions: pctOf(contributions, outgoingsTotal), _variable: Math.round(toDisplay(variableSpend)), _contributions: Math.round(toDisplay(contributions)) }
+  const spendTotal = outgoingsTotal - contributions
+  const incomeRow: Record<string, any> = { category: 'Income', income1: pctOf(p1.monthlySalaryNet, incomeTotal), income2: pctOf(p2.monthlySalaryNet, incomeTotal), variable: 0, _income1: Math.round(toDisplay(p1.monthlySalaryNet)), _income2: Math.round(toDisplay(p2.monthlySalaryNet)) }
+  const outgoingsRow: Record<string, any> = { category: 'Spending', income1: 0, income2: 0, variable: pctOf(variableSpend, spendTotal), _variable: Math.round(toDisplay(variableSpend)) }
   for (const label of expenseLabels) {
     const key = `exp_${label}`
     const amount = expenseMap.get(label)!
     incomeRow[key] = 0
-    outgoingsRow[key] = pctOf(amount, outgoingsTotal)
+    outgoingsRow[key] = pctOf(amount, spendTotal)
     outgoingsRow[`_${key}`] = Math.round(toDisplay(amount))
     incomeRow[`_${key}`] = 0
   }
-  const breakdownData = [incomeRow, outgoingsRow]
+  // Surplus breakdown: contributions per pot + unallocated
+  const surplusTotal = Math.max(0, totalIncome - totalSpending)
+  const potContribMap = new Map<string, number>()
+  for (const person of [p1, p2]) {
+    for (const c of person.monthlyContributions) {
+      if (c.amount > 0) {
+        const pot = state.savingsPots.find((p) => p.id === c.potId)
+        const label = pot?.label || 'Unknown'
+        potContribMap.set(label, (potContribMap.get(label) ?? 0) + c.amount)
+      }
+    }
+  }
+  const potLabels = Array.from(potContribMap.keys())
+  const unallocated = surplusTotal - contributions
+
+  const surplusRow: Record<string, any> = { category: 'Surplus', income1: 0, income2: 0, variable: 0 }
+  // Zero out expense keys
+  for (const label of expenseLabels) {
+    surplusRow[`exp_${label}`] = 0
+  }
+  for (const label of potLabels) {
+    const key = `pot_${label}`
+    surplusRow[key] = pctOf(potContribMap.get(label)!, surplusTotal)
+    surplusRow[`_${key}`] = Math.round(toDisplay(potContribMap.get(label)!))
+    incomeRow[key] = 0
+    outgoingsRow[key] = 0
+  }
+  surplusRow.unallocated = pctOf(Math.max(0, unallocated), surplusTotal)
+  surplusRow._unallocated = Math.round(toDisplay(Math.max(0, unallocated)))
+  incomeRow.unallocated = 0
+  outgoingsRow.unallocated = 0
+  for (const label of potLabels) {
+    incomeRow[`pot_${label}`] = 0
+    outgoingsRow[`pot_${label}`] = 0
+  }
+
+  const breakdownData = surplusTotal > 0 ? [incomeRow, outgoingsRow, surplusRow] : [incomeRow, outgoingsRow]
 
   // Colours for expense segments
   const expenseColours = ['#f87171', '#ef4444', '#dc2626', '#b91c1c', '#991b1b', '#7f1d1d', '#fca5a5', '#fb7185']
+  const potColours = ['#38bdf8', '#7dd3fc', '#0ea5e9', '#0284c7', '#0369a1']
 
   return (
     <div className="space-y-6">
@@ -247,17 +286,21 @@ export function FinancesPage() {
             </div>
           </div>
         </div>
-        <div className="border-t border-stone-700 pt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="border-t border-stone-700 pt-4 grid grid-cols-1 sm:grid-cols-4 gap-4">
           <div>
-            <div className="text-sm text-stone-400">Combined Income</div>
+            <div className="text-sm text-stone-400">Income</div>
             <div className="text-lg font-semibold font-mono">{fmt(totalIncome)}</div>
           </div>
           <div>
-            <div className="text-sm text-stone-400">Combined Outgoings</div>
-            <div className="text-lg font-semibold font-mono text-rose-400">{fmt(totalOutgoings)}</div>
+            <div className="text-sm text-stone-400">Spending</div>
+            <div className="text-lg font-semibold font-mono text-rose-400">{fmt(totalSpending)}</div>
           </div>
           <div>
-            <div className="text-sm text-stone-400">Combined Surplus</div>
+            <div className="text-sm text-stone-400">Savings</div>
+            <div className="text-lg font-semibold font-mono text-sky-400">{fmt(contributions)}</div>
+          </div>
+          <div>
+            <div className="text-sm text-stone-400">Surplus</div>
             <div className={`text-lg font-semibold font-mono ${totalSurplus >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
               {fmt(totalSurplus)}
             </div>
@@ -265,7 +308,7 @@ export function FinancesPage() {
         </div>
 
         {totalIncome > 0 && (
-          <div className="border-t border-stone-700 pt-4 mt-4 h-48">
+          <div className="border-t border-stone-700 pt-4 mt-4 h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={breakdownData} layout="vertical" barSize={28}>
                 <XAxis
@@ -294,8 +337,8 @@ export function FinancesPage() {
                     const pct = item.value as number
                     const raw = item.payload[`_${name}`]
                     const amount = raw !== undefined ? formatCurrency(raw, dc) : ''
-                    const labelMap: Record<string, string> = { income1: p1.name, income2: p2.name, variable: 'Variable Spend', contributions: 'Pot Contributions' }
-                    const label = name.startsWith('exp_') ? name.slice(4) : (labelMap[name] || name)
+                    const labelMap: Record<string, string> = { income1: p1.name, income2: p2.name, variable: 'Variable Spend', unallocated: 'Unallocated' }
+                    const label = name.startsWith('exp_') ? name.slice(4) : name.startsWith('pot_') ? name.slice(4) : (labelMap[name] || name)
                     return (
                       <div className="bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-sm">
                         <div className="text-stone-400">{label}</div>
@@ -310,7 +353,10 @@ export function FinancesPage() {
                   <Bar key={label} dataKey={`exp_${label}`} stackId="a" fill={expenseColours[i % expenseColours.length]} name={`exp_${label}`} onMouseMove={() => setHoveredSegment(`exp_${label}`)} onMouseLeave={() => setHoveredSegment(null)} />
                 ))}
                 <Bar dataKey="variable" stackId="a" fill="#fb923c" name="variable" onMouseMove={() => setHoveredSegment('variable')} onMouseLeave={() => setHoveredSegment(null)} />
-                <Bar dataKey="contributions" stackId="a" fill="#38bdf8" name="contributions" onMouseMove={() => setHoveredSegment('contributions')} onMouseLeave={() => setHoveredSegment(null)} />
+                {potLabels.map((label, i) => (
+                  <Bar key={`pot_${label}`} dataKey={`pot_${label}`} stackId="a" fill={potColours[i % potColours.length]} name={`pot_${label}`} onMouseMove={() => setHoveredSegment(`pot_${label}`)} onMouseLeave={() => setHoveredSegment(null)} />
+                ))}
+                <Bar dataKey="unallocated" stackId="a" fill="#a8a29e" name="unallocated" onMouseMove={() => setHoveredSegment('unallocated')} onMouseLeave={() => setHoveredSegment(null)} />
               </BarChart>
             </ResponsiveContainer>
           </div>
