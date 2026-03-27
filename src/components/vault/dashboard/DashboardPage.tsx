@@ -61,7 +61,7 @@ export function DashboardPage() {
           <div className="text-sm text-stone-400 mb-1">Net Worth</div>
           <CurrencyDisplay amount={netWorth} currency="AED" fxRates={rates} displayCurrency={dc} size="lg" />
           {delta !== null && (
-            <div className={`text-sm mt-2 ${delta >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+            <div className={`text-sm font-mono mt-2 ${delta >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
               {delta >= 0 ? '+' : ''}{fmt(delta)} vs last snapshot
             </div>
           )}
@@ -74,7 +74,7 @@ export function DashboardPage() {
               {fmt(combinedSurplus)}
             </span>
           </div>
-          <div className="text-xs text-stone-500 mt-1">
+          <div className="text-xs text-stone-500 font-mono mt-1">
             Income: {fmt(totalIncome)} &middot; Out: {fmt(totalOutgoings)}
           </div>
         </Card>
@@ -84,10 +84,10 @@ export function DashboardPage() {
           <div className="text-lg font-semibold">
             {state.property.length} {state.property.length === 1 ? 'property' : 'properties'}
           </div>
-          <div className="text-sm text-stone-400 mt-1">
+          <div className="text-sm text-stone-400 font-mono mt-1">
             Equity: {fmt(state.property.reduce((s, p) => s + toAED(calcPropertyEquity(p), p.currency, rates), 0))}
           </div>
-          <div className={`text-sm ${totalPropertyCashflow >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+          <div className={`text-sm font-mono ${totalPropertyCashflow >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
             Cashflow: {fmt(totalPropertyCashflow)}/mo
           </div>
         </Card>
@@ -108,7 +108,7 @@ export function DashboardPage() {
                 <div key={goal.id}>
                   <div className="flex justify-between items-center mb-1">
                     <span className="text-sm font-medium">{goal.label}</span>
-                    <span className="text-sm text-stone-400">
+                    <span className="text-sm text-stone-400 font-mono">
                       {percentage.toFixed(0)}% &middot; {fmt(remaining)} remaining
                     </span>
                   </div>
@@ -135,7 +135,7 @@ export function DashboardPage() {
                 {pot.targetBalance > 0 && (
                   <div className="mt-2">
                     <ProgressBar current={pot.currentBalance} target={pot.targetBalance} />
-                    <div className="text-xs text-stone-500 mt-1">
+                    <div className="text-xs text-stone-500 font-mono mt-1">
                       Target: {formatInDisplayCurrency(toAED(pot.targetBalance, pot.currency, rates), dc, rates)}
                     </div>
                   </div>

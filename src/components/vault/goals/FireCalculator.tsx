@@ -58,7 +58,7 @@ export function FireCalculator() {
       <div className="grid grid-cols-3 gap-4 bg-stone-700/50 rounded-lg p-4">
         <div>
           <div className="text-sm text-stone-400">FIRE Number</div>
-          <div className="text-lg font-bold text-emerald-400">
+          <div className="text-lg font-bold font-mono text-emerald-400">
             {formatCurrency(fireNumber, 'AED')}
           </div>
           <div className="text-xs text-stone-500">25x annual expenses</div>

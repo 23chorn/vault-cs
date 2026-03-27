@@ -47,7 +47,7 @@ export function SavingsPotCard({ pot, goals, people, fxRates, onEdit, onDelete }
           <div className="mt-3">
             <ProgressBar current={pot.currentBalance} target={pot.targetBalance} color="bg-emerald-500" />
             <div className="flex justify-between text-xs text-stone-500 mt-1">
-              <span>{formatCurrency(pot.currentBalance, pot.currency)} / {formatCurrency(pot.targetBalance, pot.currency)}</span>
+              <span className="font-mono">{formatCurrency(pot.currentBalance, pot.currency)} / {formatCurrency(pot.targetBalance, pot.currency)}</span>
               <span>{((pot.currentBalance / pot.targetBalance) * 100).toFixed(0)}%</span>
             </div>
           </div>
@@ -55,7 +55,7 @@ export function SavingsPotCard({ pot, goals, people, fxRates, onEdit, onDelete }
 
         <div className="mt-3 space-y-1 text-sm text-stone-400">
           {monthlyInflow > 0 && (
-            <div>Inflow: {formatCurrency(monthlyInflow, pot.currency)}/mo</div>
+            <div className="font-mono">Inflow: {formatCurrency(monthlyInflow, pot.currency)}/mo</div>
           )}
           {months !== null && months > 0 && (
             <div>~{months} months to target</div>

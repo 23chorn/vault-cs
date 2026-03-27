@@ -80,9 +80,9 @@ export function NetWorthPage() {
                 {[...snapshots].reverse().map((s) => (
                   <tr key={s.date} className="border-b border-stone-700/50 hover:bg-stone-700/30">
                     <td className="py-2 px-3">{formatDate(s.date)}</td>
-                    <td className="text-right py-2 px-3 text-emerald-400">{fmt(s.totalAssetsAED)}</td>
-                    <td className="text-right py-2 px-3 text-rose-400">{fmt(s.totalLiabilitiesAED)}</td>
-                    <td className="text-right py-2 px-3 font-medium">{fmt(s.netWorthAED)}</td>
+                    <td className="text-right py-2 px-3 text-emerald-400 font-mono">{fmt(s.totalAssetsAED)}</td>
+                    <td className="text-right py-2 px-3 text-rose-400 font-mono">{fmt(s.totalLiabilitiesAED)}</td>
+                    <td className="text-right py-2 px-3 font-medium font-mono">{fmt(s.netWorthAED)}</td>
                     <td className="py-2 px-3 text-right">
                       <button
                         onClick={() => dispatch({ type: 'DELETE_SNAPSHOT', payload: s.date })}

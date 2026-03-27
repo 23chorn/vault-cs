@@ -58,7 +58,7 @@ function ContributionsColumn({ person, savingsPots, onChange, displayCurrency }:
       </div>
       <div className="flex items-center justify-between mt-3">
         <button onClick={addContribution} className="text-sm text-amber-400 hover:text-amber-300">+ Add</button>
-        {total > 0 && <span className="text-sm text-stone-400">{formatCurrency(total, displayCurrency)}</span>}
+        {total > 0 && <span className="text-sm text-stone-400 font-mono">{formatCurrency(total, displayCurrency)}</span>}
       </div>
     </div>
   )
@@ -179,13 +179,13 @@ export function FinancesPage() {
         <div className="grid grid-cols-2 gap-6 mb-4">
           <div>
             <div className="text-sm text-stone-500">{p1.name}</div>
-            <div className={`text-lg font-bold ${p1Surplus >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+            <div className={`text-lg font-bold font-mono ${p1Surplus >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
               {fmt(toAED(p1Surplus, dc, rates))}
             </div>
           </div>
           <div>
             <div className="text-sm text-stone-500">{p2.name}</div>
-            <div className={`text-lg font-bold ${p2Surplus >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+            <div className={`text-lg font-bold font-mono ${p2Surplus >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
               {fmt(toAED(p2Surplus, dc, rates))}
             </div>
           </div>
@@ -193,15 +193,15 @@ export function FinancesPage() {
         <div className="border-t border-stone-700 pt-4 grid grid-cols-3 gap-4">
           <div>
             <div className="text-sm text-stone-400">Combined Income</div>
-            <div className="text-lg font-semibold">{fmt(totalIncome)}</div>
+            <div className="text-lg font-semibold font-mono">{fmt(totalIncome)}</div>
           </div>
           <div>
             <div className="text-sm text-stone-400">Combined Outgoings</div>
-            <div className="text-lg font-semibold text-rose-400">{fmt(totalOutgoings)}</div>
+            <div className="text-lg font-semibold font-mono text-rose-400">{fmt(totalOutgoings)}</div>
           </div>
           <div>
             <div className="text-sm text-stone-400">Combined Surplus</div>
-            <div className={`text-lg font-semibold ${totalSurplus >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+            <div className={`text-lg font-semibold font-mono ${totalSurplus >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
               {fmt(totalSurplus)}
             </div>
           </div>

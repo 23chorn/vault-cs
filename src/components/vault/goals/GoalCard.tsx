@@ -43,7 +43,7 @@ export function GoalCard({ goal, pots, people, fxRates, onEdit, onDelete }: Goal
         <div className="flex items-start justify-between mb-3">
           <div>
             <h3 className="font-semibold text-stone-100">{goal.label}</h3>
-            <div className="text-xs text-stone-500">{formatCurrency(goal.targetAmount, goal.currency)} by {formatDate(goal.targetDate)}</div>
+            <div className="text-xs text-stone-500"><span className="font-mono">{fmt(targetInAED)}</span> by {formatDate(goal.targetDate)}</div>
           </div>
           <div className="flex gap-2">
             <button onClick={onEdit} className="text-sm text-amber-400 hover:text-amber-300">Edit</button>
@@ -58,13 +58,13 @@ export function GoalCard({ goal, pots, people, fxRates, onEdit, onDelete }: Goal
         />
 
         <div className="flex justify-between text-xs mt-1">
-          <span className="text-stone-400">{fmt(currentAmount)} saved</span>
-          <span className="text-stone-400">{percentage.toFixed(0)}%</span>
+          <span className="text-stone-400 font-mono">{fmt(currentAmount)} saved</span>
+          <span className="text-stone-400 font-mono">{percentage.toFixed(0)}%</span>
         </div>
 
         <div className="mt-3 space-y-1 text-sm">
           {monthlyInflow > 0 && (
-            <div className="text-stone-400">
+            <div className="text-stone-400 font-mono">
               Inflow: {fmt(monthlyInflow)}/mo
             </div>
           )}

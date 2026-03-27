@@ -87,7 +87,7 @@ export function PersonExpenses({ person, onChange, displayCurrency }: PersonColu
       </div>
       <div className="flex items-center justify-between mt-3">
         <button onClick={addExpense} className="text-sm text-amber-400 hover:text-amber-300">+ Add</button>
-        <span className="text-sm text-stone-400">{formatCurrency(total, displayCurrency)}</span>
+        <span className="text-sm text-stone-400 font-mono">{formatCurrency(total, displayCurrency)}</span>
       </div>
     </div>
   )
