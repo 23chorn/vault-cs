@@ -1,5 +1,6 @@
 export default function SliderInput({ label, value, onChange, min = 0, max = 100, step = 1, prefix = '', suffix = '', decimals = 0 }) {
   const displayValue = typeof value === 'number' ? value : 0
+  const percent = max !== min ? ((displayValue - min) / (max - min)) * 100 : 0
 
   return (
     <div className="space-y-2">
@@ -26,6 +27,9 @@ export default function SliderInput({ label, value, onChange, min = 0, max = 100
         min={min}
         max={max}
         step={step}
+        style={{
+          background: `linear-gradient(to right, #3ea8ff ${percent}%, #2a2d3a ${percent}%)`,
+        }}
       />
     </div>
   )
