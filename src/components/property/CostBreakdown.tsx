@@ -3,7 +3,7 @@ import SectionHeader from '../shared/SectionHeader'
 import { formatCurrency } from '../../utils/format'
 import { calcMonthlyMortgage, calcAnnualCosts, calcSection24Tax } from '../../utils/finance'
 
-function Row({ label, monthly, annual, indent = false, bold = false, color }) {
+function Row({ label, monthly, annual, indent = false, bold = false, color = null }) {
   const textClass = color === 'green' ? 'text-emerald-400' : color === 'red' ? 'text-rose-400' : 'text-stone-100'
   const labelClass = indent ? 'pl-2 sm:pl-4 text-stone-400' : bold ? 'font-semibold text-stone-100' : 'text-stone-400'
 

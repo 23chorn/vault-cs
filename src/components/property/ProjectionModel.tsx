@@ -107,7 +107,7 @@ export default function ProjectionModel({ property }) {
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
             <XAxis dataKey="year" tick={{ fill: '#8b8fa7', fontSize: 10 }} axisLine={false} tickLine={false} interval={4} />
             <YAxis tick={{ fill: '#8b8fa7', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${(v / 1000).toFixed(0)}k`} width={45} />
-            <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255, 255, 255, 0.1)', strokeWidth: 1 }} />
+            <Tooltip content={<CustomTooltip active={undefined} payload={undefined} label={undefined} />} cursor={{ stroke: 'rgba(255, 255, 255, 0.1)', strokeWidth: 1 }} />
             <Legend wrapperStyle={{ fontSize: 11, color: '#8b8fa7' }} />
             <ReferenceLine x={`Yr ${projections.mortgageClearYear}`} stroke="#c084fc" strokeDasharray="3 3" label={{ value: 'Phase 2', fill: '#c084fc', fontSize: 10, position: 'top' }} />
             <Area type="monotone" dataKey="propertyValue" name="Property Value" fill="#f43f5e" fillOpacity={0.1} stroke="#f43f5e" strokeWidth={2} activeDot={{ stroke: '#f5f5f4', strokeWidth: 1.5, r: 5 }} />
@@ -123,7 +123,7 @@ export default function ProjectionModel({ property }) {
           <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <XAxis dataKey="year" tick={{ fill: '#8b8fa7', fontSize: 10 }} axisLine={false} tickLine={false} interval={4} />
             <YAxis tick={{ fill: '#8b8fa7', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${v}`} width={45} />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
+            <Tooltip content={<CustomTooltip active={undefined} payload={undefined} label={undefined} />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
             <ReferenceLine y={0} stroke="#4e5266" />
             <ReferenceLine x={`Yr ${projections.mortgageClearYear}`} stroke="#c084fc" strokeDasharray="3 3" />
             <Bar dataKey="monthlyNet" name="Monthly Net" radius={[3, 3, 0, 0]} activeBar={{ stroke: '#f5f5f4', strokeWidth: 1.5 }}>

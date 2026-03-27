@@ -14,7 +14,7 @@ export default function TaxAnalysis({ property }) {
 
   return (
     <div className="space-y-6">
-      <SectionHeader title="Tax Analysis" subtitle="Section 24 and NRLS implications" />
+      <SectionHeader title="Tax Analysis" subtitle="Section 24 and NRLS implications" action={undefined} />
 
       <div className="bg-stone-800 border border-stone-700 rounded-xl p-6">
         <h3 className="text-sm font-semibold text-stone-100 uppercase tracking-wider mb-4">Section 24 Summary</h3>

@@ -63,8 +63,7 @@ export default function RateSensitivity({ property }) {
     <div className="space-y-4 sm:space-y-6">
       <SectionHeader
         title="Rate Sensitivity"
-        subtitle="Impact of interest rate changes on monthly cashflow"
-      />
+        subtitle="Impact of interest rate changes on monthly cashflow" action={undefined}      />
 
       <div className="bg-stone-800 border border-stone-700 rounded-xl p-4 sm:p-6">
         <h3 className="text-sm font-semibold text-stone-100 uppercase tracking-wider mb-4">
@@ -79,7 +78,7 @@ export default function RateSensitivity({ property }) {
           <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <XAxis dataKey="rate" tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${v}`} width={45} />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
+            <Tooltip content={<CustomTooltip active={undefined} payload={undefined} />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
             <ReferenceLine y={0} stroke="#4e5266" />
             <Bar dataKey="monthlyPL" radius={[4, 4, 0, 0]} activeBar={{ stroke: '#f5f5f4', strokeWidth: 1.5 }}>
               {data.map((entry, i) => (

@@ -63,7 +63,7 @@ export default function SellVsHold({ property }) {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <SectionHeader title="Sell vs Hold" subtitle="Compare selling now versus continuing to hold" />
+      <SectionHeader title="Sell vs Hold" subtitle="Compare selling now versus continuing to hold" action={undefined} />
 
       <div className="bg-stone-800 border border-stone-700 rounded-xl p-4 sm:p-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -141,7 +141,7 @@ export default function SellVsHold({ property }) {
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
             <XAxis dataKey="growthRate" tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${(v / 1000).toFixed(0)}k`} width={45} />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
+            <Tooltip content={<CustomTooltip active={undefined} payload={undefined} label={undefined} />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
             <Bar dataKey="sellPath" name="Sell & Invest" fill="#f43f5e" radius={[4, 4, 0, 0]} activeBar={{ stroke: '#f5f5f4', strokeWidth: 1.5 }} />
             <Bar dataKey="holdPath" name="Hold" fill="#34d399" radius={[4, 4, 0, 0]} activeBar={{ stroke: '#f5f5f4', strokeWidth: 1.5 }} />

@@ -27,11 +27,15 @@ export function vaultReducer(state: VaultData, action: VaultAction): VaultData {
             AED_USD: action.payload.meta.fxRates?.AED_USD ?? 0.27,
           },
         },
-        fire: action.payload.fire ?? {
+        fire: {
           annualExpenses: 0,
           currentInvestments: 0,
           monthlyContribution: 0,
           annualReturn: 7,
+          targetYears: 20,
+          inflationRate: 3,
+          withdrawalRate: 4,
+          ...action.payload.fire,
         },
       }
 

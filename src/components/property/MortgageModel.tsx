@@ -45,14 +45,13 @@ export default function MortgageModel({ property }) {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <SectionHeader title="Mortgage Model" subtitle="LTV trajectory, payments, and exit strategies" />
+      <SectionHeader title="Mortgage Model" subtitle="LTV trajectory, payments, and exit strategies" action={undefined} />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         <MetricCard
           label="Monthly Payment"
           value={formatCurrency(monthlyPayment)}
-          subValue={`${mortgage.type === 'interest-only' ? 'Interest only' : 'Repayment'} @ ${formatPercent(mortgage.currentRate)}`}
-        />
+          subValue={`${mortgage.type === 'interest-only' ? 'Interest only' : 'Repayment'} @ ${formatPercent(mortgage.currentRate)}`} positive={undefined}        />
         <MetricCard
           label="Current LTV"
           value={formatPercent(currentLTV)}
@@ -76,7 +75,7 @@ export default function MortgageModel({ property }) {
           <BarChart data={ltvData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <XAxis dataKey="year" tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 100]} tickFormatter={(v) => `${v}%`} width={40} />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
+            <Tooltip content={<CustomTooltip active={undefined} payload={undefined} />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
             <ReferenceLine y={75} stroke="#fb7185" strokeDasharray="3 3" label={{ value: '75%', fill: '#fb7185', fontSize: 10, position: 'insideTopRight' }} />
             <ReferenceLine y={60} stroke="#34d399" strokeDasharray="3 3" label={{ value: '60%', fill: '#34d399', fontSize: 10, position: 'insideTopRight' }} />
             <Bar dataKey="ltv" radius={[4, 4, 0, 0]} activeBar={{ stroke: '#f5f5f4', strokeWidth: 1.5 }}>
