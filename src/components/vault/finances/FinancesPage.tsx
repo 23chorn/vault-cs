@@ -6,6 +6,7 @@ import { calcPersonMonthlySurplus, calcPersonMonthlyOutgoings } from '../../../u
 import { PersonHeader, PersonIncome, PersonExpenses, PersonVariableSpend } from './PersonColumn.tsx'
 import { NumberInput } from '../../shared/NumberInput.tsx'
 import { fetchLiveRates } from '../../../utils/fetchRates.ts'
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import type { Person, SavingsPot, PotContribution, Currency } from '../../../types/vault.ts'
 import type { FxRates } from '../../../utils/currency.ts'
 
@@ -75,6 +76,7 @@ export function FinancesPage() {
   const dc = state.meta.displayCurrency
   const fmt = (aed: number) => formatInDisplayCurrency(aed, dc, rates)
   const [refreshing, setRefreshing] = useState(false)
+  const [hoveredSegment, setHoveredSegment] = useState<string | null>(null)
 
   const p1 = state.people.person1
   const p2 = state.people.person2
@@ -105,6 +107,42 @@ export function FinancesPage() {
   const totalIncome = p1.monthlySalaryNet + p2.monthlySalaryNet
   const totalOutgoings = calcPersonMonthlyOutgoings(p1) + calcPersonMonthlyOutgoings(p2)
   const totalSurplus = p1Surplus + p2Surplus
+
+  const toDisplay = (aed: number) => fromAED(aed, dc, rates)
+
+  // Breakdown for stacked bar
+  const variableSpend = p1.monthlyVariableSpend + p2.monthlyVariableSpend
+  const contributions = p1.monthlyContributions.reduce((s, c) => s + c.amount, 0) +
+    p2.monthlyContributions.reduce((s, c) => s + c.amount, 0)
+
+  // Merge fixed expenses by label across both people
+  const expenseMap = new Map<string, number>()
+  for (const e of [...p1.monthlyFixedExpenses, ...p2.monthlyFixedExpenses]) {
+    if (e.amount > 0) {
+      expenseMap.set(e.label || 'Other', (expenseMap.get(e.label || 'Other') ?? 0) + e.amount)
+    }
+  }
+  const expenseLabels = Array.from(expenseMap.keys())
+
+  // Build chart data as percentages so both bars are same length
+  const incomeTotal = p1.monthlySalaryNet + p2.monthlySalaryNet
+  const outgoingsTotal = totalOutgoings
+  const pctOf = (amount: number, total: number) => total > 0 ? Math.round((amount / total) * 1000) / 10 : 0
+
+  const incomeRow: Record<string, any> = { category: 'Income', income1: pctOf(p1.monthlySalaryNet, incomeTotal), income2: pctOf(p2.monthlySalaryNet, incomeTotal), variable: 0, contributions: 0, _income1: Math.round(toDisplay(p1.monthlySalaryNet)), _income2: Math.round(toDisplay(p2.monthlySalaryNet)) }
+  const outgoingsRow: Record<string, any> = { category: 'Outgoings', income1: 0, income2: 0, variable: pctOf(variableSpend, outgoingsTotal), contributions: pctOf(contributions, outgoingsTotal), _variable: Math.round(toDisplay(variableSpend)), _contributions: Math.round(toDisplay(contributions)) }
+  for (const label of expenseLabels) {
+    const key = `exp_${label}`
+    const amount = expenseMap.get(label)!
+    incomeRow[key] = 0
+    outgoingsRow[key] = pctOf(amount, outgoingsTotal)
+    outgoingsRow[`_${key}`] = Math.round(toDisplay(amount))
+    incomeRow[`_${key}`] = 0
+  }
+  const breakdownData = [incomeRow, outgoingsRow]
+
+  // Colours for expense segments
+  const expenseColours = ['#f87171', '#ef4444', '#dc2626', '#b91c1c', '#991b1b', '#7f1d1d', '#fca5a5', '#fb7185']
 
   return (
     <div className="space-y-6">
@@ -225,6 +263,58 @@ export function FinancesPage() {
             </div>
           </div>
         </div>
+
+        {totalIncome > 0 && (
+          <div className="border-t border-stone-700 pt-4 mt-4 h-48">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={breakdownData} layout="vertical" barSize={28}>
+                <XAxis
+                  type="number"
+                  domain={[0, 100]}
+                  tick={{ fill: '#a8a29e', fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={(v) => `${v}%`}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="category"
+                  tick={{ fill: '#a8a29e', fontSize: 12 }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={80}
+                />
+                <Tooltip
+                  cursor={false}
+                  content={({ active, payload }) => {
+                    if (!active || !payload?.length || !hoveredSegment) return null
+                    const item = payload.find((p: any) => p.dataKey === hoveredSegment)
+                    if (!item || item.value === 0) return null
+                    const name = item.dataKey as string
+                    const pct = item.value as number
+                    const raw = item.payload[`_${name}`]
+                    const amount = raw !== undefined ? formatCurrency(raw, dc) : ''
+                    const labelMap: Record<string, string> = { income1: p1.name, income2: p2.name, variable: 'Variable Spend', contributions: 'Pot Contributions' }
+                    const label = name.startsWith('exp_') ? name.slice(4) : (labelMap[name] || name)
+                    return (
+                      <div className="bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-sm">
+                        <div className="text-stone-400">{label}</div>
+                        <div className="font-mono text-stone-100">{amount} <span className="text-stone-500">({pct}%)</span></div>
+                      </div>
+                    )
+                  }}
+                />
+                <Bar dataKey="income1" stackId="a" fill="#34d399" name="income1" onMouseMove={() => setHoveredSegment('income1')} onMouseLeave={() => setHoveredSegment(null)} />
+                <Bar dataKey="income2" stackId="a" fill="#6ee7b7" name="income2" onMouseMove={() => setHoveredSegment('income2')} onMouseLeave={() => setHoveredSegment(null)} />
+                {expenseLabels.map((label, i) => (
+                  <Bar key={label} dataKey={`exp_${label}`} stackId="a" fill={expenseColours[i % expenseColours.length]} name={`exp_${label}`} onMouseMove={() => setHoveredSegment(`exp_${label}`)} onMouseLeave={() => setHoveredSegment(null)} />
+                ))}
+                <Bar dataKey="variable" stackId="a" fill="#fb923c" name="variable" onMouseMove={() => setHoveredSegment('variable')} onMouseLeave={() => setHoveredSegment(null)} />
+                <Bar dataKey="contributions" stackId="a" fill="#38bdf8" name="contributions" onMouseMove={() => setHoveredSegment('contributions')} onMouseLeave={() => setHoveredSegment(null)} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </Card>
     </div>
   )
