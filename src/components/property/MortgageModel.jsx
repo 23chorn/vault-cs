@@ -21,7 +21,6 @@ export default function MortgageModel({ property }) {
     return { year: `Yr ${year}`, ltv: parseFloat(ltv.toFixed(1)), fill: getLTVColor(ltv) }
   })
 
-  // Exit strategy calculations
   const sellNowEquity = calcNetEquity(
     meta.currentEstimatedValue, mortgage.balance, meta.purchasePrice,
     projections.cgtRate, 1.5, 2000, 3000
@@ -45,11 +44,10 @@ export default function MortgageModel({ property }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <SectionHeader title="Mortgage Model" subtitle="LTV trajectory, payments, and exit strategies" />
 
-      {/* Key figures */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         <MetricCard
           label="Monthly Payment"
           value={formatCurrency(monthlyPayment)}
@@ -69,16 +67,15 @@ export default function MortgageModel({ property }) {
         />
       </div>
 
-      {/* LTV Trajectory Chart */}
-      <div className="bg-bg-surface border border-border rounded-xl p-6">
+      <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6">
         <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider mb-4">LTV Trajectory</h3>
         <p className="text-xs text-text-secondary mb-4">
           Based on {formatPercent(projections.houseGrowthRate)} annual growth from {formatCurrency(meta.currentEstimatedValue)}
         </p>
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart data={ltvData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-            <XAxis dataKey="year" tick={{ fill: '#8b8fa7', fontSize: 12 }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fill: '#8b8fa7', fontSize: 12 }} axisLine={false} tickLine={false} domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
+        <ResponsiveContainer width="100%" height={200} className="sm:!h-[250px]">
+          <BarChart data={ltvData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <XAxis dataKey="year" tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 100]} tickFormatter={(v) => `${v}%`} width={40} />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
             <ReferenceLine y={75} stroke="#ff4d6a" strokeDasharray="3 3" label={{ value: '75%', fill: '#ff4d6a', fontSize: 10 }} />
             <ReferenceLine y={60} stroke="#00e59b" strokeDasharray="3 3" label={{ value: '60%', fill: '#00e59b', fontSize: 10 }} />
@@ -91,11 +88,10 @@ export default function MortgageModel({ property }) {
         </ResponsiveContainer>
       </div>
 
-      {/* Exit Strategies */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-bg-surface border border-border rounded-xl p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6">
           <h4 className="text-xs text-text-muted uppercase tracking-wider mb-3">Sell Now</h4>
-          <p className="text-2xl font-mono text-accent-green mb-2">{formatCurrency(sellNowEquity)}</p>
+          <p className="text-xl sm:text-2xl font-mono text-accent-green mb-2">{formatCurrency(sellNowEquity)}</p>
           <div className="space-y-1 text-xs text-text-secondary">
             <p>Market value: {formatCurrency(meta.currentEstimatedValue)}</p>
             <p>Less mortgage: {formatCurrency(mortgage.balance)}</p>
@@ -103,9 +99,9 @@ export default function MortgageModel({ property }) {
           </div>
         </div>
 
-        <div className="bg-bg-surface border border-border rounded-xl p-6">
+        <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6">
           <h4 className="text-xs text-text-muted uppercase tracking-wider mb-3">Sell at Year 20</h4>
-          <p className="text-2xl font-mono text-accent-green mb-2">{formatCurrency(sellYear20Equity)}</p>
+          <p className="text-xl sm:text-2xl font-mono text-accent-green mb-2">{formatCurrency(sellYear20Equity)}</p>
           <div className="space-y-1 text-xs text-text-secondary">
             <p>Future value: {formatCurrency(futureValue20)}</p>
             <p>At {formatPercent(projections.houseGrowthRate)} growth p.a.</p>
@@ -113,9 +109,9 @@ export default function MortgageModel({ property }) {
           </div>
         </div>
 
-        <div className="bg-bg-surface border border-border rounded-xl p-6">
+        <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6">
           <h4 className="text-xs text-text-muted uppercase tracking-wider mb-3">Repayment Vehicle</h4>
-          <p className="text-2xl font-mono text-accent-blue mb-2">{formatCurrency(repaymentPMT)}<span className="text-sm text-text-muted">/mo</span></p>
+          <p className="text-xl sm:text-2xl font-mono text-accent-blue mb-2">{formatCurrency(repaymentPMT)}<span className="text-sm text-text-muted">/mo</span></p>
           <div className="space-y-1 text-xs text-text-secondary">
             <p>To accumulate {formatCurrency(mortgage.balance)}</p>
             <p>Over {projections.mortgageClearYear} years</p>

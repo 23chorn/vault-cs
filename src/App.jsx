@@ -56,7 +56,7 @@ export default function App() {
       />
       <div className="flex-1 flex flex-col min-w-0">
         <Header property={activeProperty} saveStatus={saveStatus} />
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6">
           {renderSection()}
         </main>
       </div>

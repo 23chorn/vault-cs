@@ -5,7 +5,7 @@ import { formatCurrency } from '../../utils/format'
 
 function ConfigSection({ title, children, onReset }) {
   return (
-    <div className="bg-bg-surface border border-border rounded-xl p-6">
+    <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6">
       <div className="flex justify-between items-center mb-5">
         <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider">{title}</h3>
         {onReset && (
@@ -42,10 +42,10 @@ export default function PropertyConfig({ property, updateField, resetSection }) 
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <SectionHeader title="Property Configuration" subtitle="Edit all property inputs — changes update calculations in real time" />
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Property Details */}
         <ConfigSection title="Property Details" onReset={() => resetSection('meta')}>
           <div className="space-y-3">
@@ -145,13 +145,13 @@ export default function PropertyConfig({ property, updateField, resetSection }) 
             <p className="text-xs text-text-muted uppercase tracking-wider mb-2">Additional Costs</p>
             {costs.additionalCosts.map((cost, i) => (
               <div key={i} className="flex items-center gap-2 mb-2">
-                <span className="flex-1 text-sm text-text-secondary">{cost.label}</span>
+                <span className="flex-1 text-sm text-text-secondary truncate">{cost.label}</span>
                 <span className="font-mono text-sm text-text-primary">{formatCurrency(cost.amount)}</span>
                 <span className="text-xs text-text-muted">{cost.year}</span>
                 <button onClick={() => removeAdditionalCost(i)} className="text-accent-red text-xs hover:text-accent-red/80">x</button>
               </div>
             ))}
-            <div className="flex items-end gap-2 mt-3">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-2 mt-3">
               <input
                 type="text"
                 placeholder="Label"
@@ -159,23 +159,25 @@ export default function PropertyConfig({ property, updateField, resetSection }) 
                 onChange={(e) => setNewCostLabel(e.target.value)}
                 className="flex-1 bg-bg-elevated border border-border rounded px-2 py-1.5 text-xs text-text-primary focus:outline-none focus:border-accent-blue"
               />
-              <input
-                type="number"
-                placeholder="Amount"
-                value={newCostAmount}
-                onChange={(e) => setNewCostAmount(e.target.value)}
-                className="w-24 bg-bg-elevated border border-border rounded px-2 py-1.5 text-xs text-text-primary focus:outline-none focus:border-accent-blue"
-              />
-              <input
-                type="number"
-                placeholder="Year"
-                value={newCostYear}
-                onChange={(e) => setNewCostYear(parseInt(e.target.value))}
-                className="w-20 bg-bg-elevated border border-border rounded px-2 py-1.5 text-xs text-text-primary focus:outline-none focus:border-accent-blue"
-              />
-              <button onClick={addAdditionalCost} className="text-xs bg-accent-blue/10 text-accent-blue px-3 py-1.5 rounded hover:bg-accent-blue/20 transition-colors">
-                Add
-              </button>
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  placeholder="Amount"
+                  value={newCostAmount}
+                  onChange={(e) => setNewCostAmount(e.target.value)}
+                  className="w-24 bg-bg-elevated border border-border rounded px-2 py-1.5 text-xs text-text-primary focus:outline-none focus:border-accent-blue"
+                />
+                <input
+                  type="number"
+                  placeholder="Year"
+                  value={newCostYear}
+                  onChange={(e) => setNewCostYear(parseInt(e.target.value))}
+                  className="w-20 bg-bg-elevated border border-border rounded px-2 py-1.5 text-xs text-text-primary focus:outline-none focus:border-accent-blue"
+                />
+                <button onClick={addAdditionalCost} className="text-xs bg-accent-blue/10 text-accent-blue px-3 py-1.5 rounded hover:bg-accent-blue/20 transition-colors whitespace-nowrap">
+                  Add
+                </button>
+              </div>
             </div>
           </div>
         </ConfigSection>

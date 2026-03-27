@@ -9,9 +9,9 @@ function Row({ label, monthly, annual, indent = false, bold = false, color }) {
 
   return (
     <tr className="border-b border-border/50">
-      <td className={`py-2.5 text-sm ${labelClass}`}>{label}</td>
-      <td className={`py-2.5 text-sm font-mono text-right ${bold ? 'font-medium' : ''} ${textClass}`}>{formatCurrency(monthly)}</td>
-      <td className={`py-2.5 text-sm font-mono text-right ${bold ? 'font-medium' : ''} ${textClass}`}>{formatCurrency(annual)}</td>
+      <td className={`py-2 sm:py-2.5 text-xs sm:text-sm ${labelClass}`}>{label}</td>
+      <td className={`py-2 sm:py-2.5 text-xs sm:text-sm font-mono text-right ${bold ? 'font-medium' : ''} ${textClass}`}>{formatCurrency(monthly)}</td>
+      <td className={`py-2 sm:py-2.5 text-xs sm:text-sm font-mono text-right ${bold ? 'font-medium' : ''} ${textClass}`}>{formatCurrency(annual)}</td>
     </tr>
   )
 }
@@ -34,7 +34,7 @@ export default function CostBreakdown({ property }) {
   const afterTaxProfit = preTaxProfit - s24.netTax
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <SectionHeader
         title="Cost Breakdown"
         subtitle="Annual P&L with all costs itemised"
@@ -61,8 +61,8 @@ export default function CostBreakdown({ property }) {
         </div>
       )}
 
-      <div className="bg-bg-surface border border-border rounded-xl p-6">
-        <table className="w-full">
+      <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6 overflow-x-auto">
+        <table className="w-full min-w-[400px]">
           <thead>
             <tr className="border-b border-border">
               <th className="text-left text-xs text-text-muted uppercase tracking-wider py-2">Item</th>
@@ -109,38 +109,38 @@ export default function CostBreakdown({ property }) {
       </div>
 
       {showS24 && (
-        <div className="bg-bg-surface border border-border rounded-xl p-6">
+        <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6">
           <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider mb-4">Section 24 Walkthrough</h3>
-          <div className="space-y-3 text-sm">
-            <div className="flex justify-between">
+          <div className="space-y-3 text-xs sm:text-sm">
+            <div className="flex justify-between gap-2">
               <span className="text-text-secondary">1. Total rental income</span>
-              <span className="font-mono text-text-primary">{formatCurrency(annualRent)}</span>
+              <span className="font-mono text-text-primary shrink-0">{formatCurrency(annualRent)}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between gap-2">
               <span className="text-text-secondary">2. Less allowable expenses (NOT mortgage interest)</span>
-              <span className="font-mono text-text-primary">-{formatCurrency(totalCosts)}</span>
+              <span className="font-mono text-text-primary shrink-0">-{formatCurrency(totalCosts)}</span>
             </div>
             {tax.claimsPersonalAllowance && (
-              <div className="flex justify-between">
+              <div className="flex justify-between gap-2">
                 <span className="text-text-secondary">3. Less personal allowance</span>
-                <span className="font-mono text-text-primary">-{formatCurrency(tax.personalAllowance)}</span>
+                <span className="font-mono text-text-primary shrink-0">-{formatCurrency(tax.personalAllowance)}</span>
               </div>
             )}
-            <div className="flex justify-between border-t border-border pt-2">
+            <div className="flex justify-between gap-2 border-t border-border pt-2">
               <span className="text-text-primary font-medium">= Taxable profit</span>
-              <span className="font-mono text-text-primary">{formatCurrency(s24.taxableProfit)}</span>
+              <span className="font-mono text-text-primary shrink-0">{formatCurrency(s24.taxableProfit)}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between gap-2">
               <span className="text-text-secondary">4. Tax at {tax.taxRate}%</span>
-              <span className="font-mono text-accent-red">{formatCurrency(s24.grossTax)}</span>
+              <span className="font-mono text-accent-red shrink-0">{formatCurrency(s24.grossTax)}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between gap-2">
               <span className="text-text-secondary">5. Less 20% tax credit on mortgage interest ({formatCurrency(mortgageInterest)})</span>
-              <span className="font-mono text-accent-green">-{formatCurrency(s24.taxCredit)}</span>
+              <span className="font-mono text-accent-green shrink-0">-{formatCurrency(s24.taxCredit)}</span>
             </div>
-            <div className="flex justify-between border-t border-border pt-2">
+            <div className="flex justify-between gap-2 border-t border-border pt-2">
               <span className="text-text-primary font-medium">= Net tax payable</span>
-              <span className="font-mono text-accent-red">{formatCurrency(s24.netTax)}</span>
+              <span className="font-mono text-accent-red shrink-0">{formatCurrency(s24.netTax)}</span>
             </div>
           </div>
         </div>

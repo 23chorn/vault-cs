@@ -55,7 +55,7 @@ export default function ProjectionModel({ property }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <SectionHeader
         title="20-Year Projection"
         subtitle={`Phase 1: ${projections.mortgageClearYear} years with mortgage | Phase 2: ${projections.phase2Years} years post-mortgage`}
@@ -73,8 +73,7 @@ export default function ProjectionModel({ property }) {
         }
       />
 
-      {/* Summary cards */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <MetricCard
           label="Phase 1 Cumulative"
           value={formatCurrency(phase1Cumulative)}
@@ -101,16 +100,15 @@ export default function ProjectionModel({ property }) {
         />
       </div>
 
-      {/* Cumulative cashflow, property value, equity area chart */}
-      <div className="bg-bg-surface border border-border rounded-xl p-6">
+      <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6">
         <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider mb-4">Value & Equity Trajectory</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+        <ResponsiveContainer width="100%" height={220} className="sm:!h-[300px]">
+          <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-            <XAxis dataKey="year" tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} interval={2} />
-            <YAxis tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${(v / 1000).toFixed(0)}k`} />
+            <XAxis dataKey="year" tick={{ fill: '#8b8fa7', fontSize: 10 }} axisLine={false} tickLine={false} interval={4} />
+            <YAxis tick={{ fill: '#8b8fa7', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${(v / 1000).toFixed(0)}k`} width={45} />
             <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255, 255, 255, 0.1)', strokeWidth: 1 }} />
-            <Legend wrapperStyle={{ fontSize: 12, color: '#8b8fa7' }} />
+            <Legend wrapperStyle={{ fontSize: 11, color: '#8b8fa7' }} />
             <ReferenceLine x={`Yr ${projections.mortgageClearYear}`} stroke="#a78bfa" strokeDasharray="3 3" label={{ value: 'Phase 2', fill: '#a78bfa', fontSize: 10, position: 'top' }} />
             <Area type="monotone" dataKey="propertyValue" name="Property Value" fill="#3ea8ff" fillOpacity={0.1} stroke="#3ea8ff" strokeWidth={2} activeDot={{ stroke: '#eef0f6', strokeWidth: 1.5, r: 5 }} />
             <Area type="monotone" dataKey="equity" name="Equity" fill="#00e59b" fillOpacity={0.1} stroke="#00e59b" strokeWidth={2} activeDot={{ stroke: '#eef0f6', strokeWidth: 1.5, r: 5 }} />
@@ -119,13 +117,12 @@ export default function ProjectionModel({ property }) {
         </ResponsiveContainer>
       </div>
 
-      {/* Monthly cashflow bar chart */}
-      <div className="bg-bg-surface border border-border rounded-xl p-6">
+      <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6">
         <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider mb-4">Monthly Net Cashflow by Year</h3>
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-            <XAxis dataKey="year" tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} interval={2} />
-            <YAxis tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${v}`} />
+        <ResponsiveContainer width="100%" height={200} className="sm:!h-[250px]">
+          <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <XAxis dataKey="year" tick={{ fill: '#8b8fa7', fontSize: 10 }} axisLine={false} tickLine={false} interval={4} />
+            <YAxis tick={{ fill: '#8b8fa7', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${v}`} width={45} />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
             <ReferenceLine y={0} stroke="#4e5266" />
             <ReferenceLine x={`Yr ${projections.mortgageClearYear}`} stroke="#a78bfa" strokeDasharray="3 3" />
@@ -138,10 +135,9 @@ export default function ProjectionModel({ property }) {
         </ResponsiveContainer>
       </div>
 
-      {/* Year-by-year table */}
-      <div className="bg-bg-surface border border-border rounded-xl p-6 overflow-x-auto">
+      <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6 overflow-x-auto">
         <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider mb-4">Year-by-Year Breakdown</h3>
-        <table className="w-full text-xs">
+        <table className="w-full text-xs min-w-[700px]">
           <thead>
             <tr className="border-b border-border">
               <th className="text-left py-2 text-text-muted">Year</th>

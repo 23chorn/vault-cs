@@ -26,11 +26,9 @@ export default function RateSensitivity({ property }) {
     }
   })
 
-  // Find breakeven rate
   const breakeven = data.find((d, i) => i > 0 && data[i - 1].monthlyPL >= 0 && d.monthlyPL < 0)
   const breakevenRate = breakeven ? breakeven.rateNum : null
 
-  // Renewal scenario
   const currentMonthly = calcMonthlyInterestOnly(mortgage.balance, mortgage.currentRate)
   const scenarios = [
     { newRate: mortgage.currentRate - 1, label: '-1%' },
@@ -62,14 +60,13 @@ export default function RateSensitivity({ property }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <SectionHeader
         title="Rate Sensitivity"
         subtitle="Impact of interest rate changes on monthly cashflow"
       />
 
-      {/* Bar chart */}
-      <div className="bg-bg-surface border border-border rounded-xl p-6">
+      <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6">
         <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider mb-4">
           Monthly P&L by Rate
         </h3>
@@ -78,10 +75,10 @@ export default function RateSensitivity({ property }) {
             Breakeven rate: ~{formatPercent(breakevenRate)}
           </p>
         )}
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-            <XAxis dataKey="rate" tick={{ fill: '#8b8fa7', fontSize: 12 }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fill: '#8b8fa7', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${v}`} />
+        <ResponsiveContainer width="100%" height={220} className="sm:!h-[300px]">
+          <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <XAxis dataKey="rate" tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${v}`} width={45} />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
             <ReferenceLine y={0} stroke="#4e5266" />
             <Bar dataKey="monthlyPL" radius={[4, 4, 0, 0]} activeBar={{ stroke: '#eef0f6', strokeWidth: 1.5 }}>
@@ -98,15 +95,14 @@ export default function RateSensitivity({ property }) {
         </ResponsiveContainer>
       </div>
 
-      {/* Renewal scenario table */}
-      <div className="bg-bg-surface border border-border rounded-xl p-6">
+      <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6 overflow-x-auto">
         <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider mb-4">
           Renewal Scenarios
         </h3>
         <p className="text-xs text-text-secondary mb-4">
           Current rate: {formatPercent(mortgage.currentRate)} | Monthly payment: {formatCurrency(currentMonthly)}
         </p>
-        <table className="w-full">
+        <table className="w-full min-w-[420px]">
           <thead>
             <tr className="border-b border-border">
               <th className="text-left text-xs text-text-muted uppercase tracking-wider py-2">Change</th>

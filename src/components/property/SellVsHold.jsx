@@ -8,18 +8,16 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, Cart
 export default function SellVsHold({ property }) {
   const [growthRate, setGrowthRate] = useState(property.projections.houseGrowthRate)
   const [holdYears, setHoldYears] = useState(property.projections.mortgageClearYear)
-  const investmentReturn = 5 // assumed return if proceeds are invested
+  const investmentReturn = 5
 
   const { meta, mortgage, projections } = property
 
-  // Sell path
   const sellNowEquity = calcNetEquity(
     meta.currentEstimatedValue, mortgage.balance, meta.purchasePrice,
     projections.cgtRate, 1.5, 2000, 3000
   )
   const sellProcedsCompounded = calcFutureValue(sellNowEquity, investmentReturn, holdYears)
 
-  // Hold path
   const modifiedProperty = { ...property, projections: { ...projections, houseGrowthRate: growthRate } }
   const projection = buildProjection(modifiedProperty)
   const holdData = projection.find((y) => y.year === holdYears) || projection[projection.length - 1]
@@ -32,7 +30,6 @@ export default function SellVsHold({ property }) {
 
   const holdAdvantage = holdTotal - sellProcedsCompounded
 
-  // Sensitivity table
   const growthRates = [2, 2.5, 3, 3.7, 4, 5]
   const sensitivityData = growthRates.map((gr) => {
     const fv = calcFutureValue(meta.currentEstimatedValue, gr, holdYears)
@@ -65,12 +62,11 @@ export default function SellVsHold({ property }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <SectionHeader title="Sell vs Hold" subtitle="Compare selling now versus continuing to hold" />
 
-      {/* Controls */}
-      <div className="bg-bg-surface border border-border rounded-xl p-6">
-        <div className="grid grid-cols-2 gap-6">
+      <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           <SliderInput
             label="Growth Rate Assumption"
             value={growthRate}
@@ -92,45 +88,43 @@ export default function SellVsHold({ property }) {
         </div>
       </div>
 
-      {/* Comparison cards */}
-      <div className="grid grid-cols-2 gap-6">
-        <div className="bg-bg-surface border border-border rounded-xl p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6">
           <h3 className="text-xs text-text-muted uppercase tracking-wider mb-4">Sell Now & Invest</h3>
-          <p className="text-3xl font-mono text-accent-blue mb-4">{formatCurrency(sellProcedsCompounded)}</p>
+          <p className="text-2xl sm:text-3xl font-mono text-accent-blue mb-4">{formatCurrency(sellProcedsCompounded)}</p>
           <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
+            <div className="flex justify-between gap-2">
               <span className="text-text-secondary">Net sale proceeds today</span>
-              <span className="font-mono text-text-primary">{formatCurrency(sellNowEquity)}</span>
+              <span className="font-mono text-text-primary shrink-0">{formatCurrency(sellNowEquity)}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between gap-2">
               <span className="text-text-secondary">Compounded at {investmentReturn}% for {holdYears} years</span>
-              <span className="font-mono text-text-primary">{formatCurrency(sellProcedsCompounded)}</span>
+              <span className="font-mono text-text-primary shrink-0">{formatCurrency(sellProcedsCompounded)}</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-bg-surface border border-border rounded-xl p-6">
+        <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6">
           <h3 className="text-xs text-text-muted uppercase tracking-wider mb-4">Hold for {holdYears} Years</h3>
-          <p className="text-3xl font-mono text-accent-green mb-4">{formatCurrency(holdTotal)}</p>
+          <p className="text-2xl sm:text-3xl font-mono text-accent-green mb-4">{formatCurrency(holdTotal)}</p>
           <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
+            <div className="flex justify-between gap-2">
               <span className="text-text-secondary">Net equity at year {holdYears}</span>
-              <span className="font-mono text-text-primary">{formatCurrency(holdEquity)}</span>
+              <span className="font-mono text-text-primary shrink-0">{formatCurrency(holdEquity)}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between gap-2">
               <span className="text-text-secondary">Cumulative rental net</span>
-              <span className="font-mono text-text-primary">{formatCurrency(holdData.cumulativeCashflow)}</span>
+              <span className="font-mono text-text-primary shrink-0">{formatCurrency(holdData.cumulativeCashflow)}</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Verdict */}
-      <div className={`border rounded-xl p-6 text-center ${holdAdvantage >= 0 ? 'bg-accent-green/5 border-accent-green/20' : 'bg-accent-red/5 border-accent-red/20'}`}>
+      <div className={`border rounded-xl p-4 sm:p-6 text-center ${holdAdvantage >= 0 ? 'bg-accent-green/5 border-accent-green/20' : 'bg-accent-red/5 border-accent-red/20'}`}>
         <p className="text-sm text-text-secondary mb-1">
           {holdAdvantage >= 0 ? 'Holding is better by' : 'Selling is better by'}
         </p>
-        <p className={`text-3xl font-mono font-medium ${holdAdvantage >= 0 ? 'text-accent-green' : 'text-accent-red'}`}>
+        <p className={`text-2xl sm:text-3xl font-mono font-medium ${holdAdvantage >= 0 ? 'text-accent-green' : 'text-accent-red'}`}>
           {formatCurrency(Math.abs(holdAdvantage))}
         </p>
         <p className="text-xs text-text-muted mt-2">
@@ -138,30 +132,28 @@ export default function SellVsHold({ property }) {
         </p>
       </div>
 
-      {/* Sensitivity chart */}
-      <div className="bg-bg-surface border border-border rounded-xl p-6">
+      <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6">
         <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider mb-4">
           Sensitivity: Hold Advantage by Growth Rate
         </h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={sensitivityData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+        <ResponsiveContainer width="100%" height={220} className="sm:!h-[300px]">
+          <BarChart data={sensitivityData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-            <XAxis dataKey="growthRate" tick={{ fill: '#8b8fa7', fontSize: 12 }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fill: '#8b8fa7', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${(v / 1000).toFixed(0)}k`} />
+            <XAxis dataKey="growthRate" tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${(v / 1000).toFixed(0)}k`} width={45} />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
-            <Legend wrapperStyle={{ fontSize: 12 }} />
+            <Legend wrapperStyle={{ fontSize: 11 }} />
             <Bar dataKey="sellPath" name="Sell & Invest" fill="#3ea8ff" radius={[4, 4, 0, 0]} activeBar={{ stroke: '#eef0f6', strokeWidth: 1.5 }} />
             <Bar dataKey="holdPath" name="Hold" fill="#00e59b" radius={[4, 4, 0, 0]} activeBar={{ stroke: '#eef0f6', strokeWidth: 1.5 }} />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Sensitivity table */}
-      <div className="bg-bg-surface border border-border rounded-xl p-6">
+      <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6 overflow-x-auto">
         <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider mb-4">
           Sensitivity Table
         </h3>
-        <table className="w-full text-sm">
+        <table className="w-full text-sm min-w-[400px]">
           <thead>
             <tr className="border-b border-border">
               <th className="text-left py-2 text-xs text-text-muted uppercase">Growth Rate</th>
