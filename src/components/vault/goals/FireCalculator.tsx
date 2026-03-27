@@ -147,7 +147,7 @@ export function FireCalculator() {
 
   const targetYears = fire.targetYears ?? 20
   const inflationRate = fire.inflationRate ?? 3
-  const withdrawalRate = fire.withdrawalRate ?? 4
+  const withdrawalRate = 4
   const todayFireNumber = fire.annualExpenses / (withdrawalRate / 100)
   const adjustedFireNumber = fireNumberAtYear(fire.annualExpenses, withdrawalRate, inflationRate, targetYears)
 
@@ -206,10 +206,6 @@ export function FireCalculator() {
           <label>Inflation (%/yr)</label>
           <NumberInput value={inflationRate} onChange={(v) => set({ inflationRate: v })} decimals={1} />
         </div>
-        <div>
-          <label>Withdrawal Rate (%)</label>
-          <NumberInput value={withdrawalRate} onChange={(v) => set({ withdrawalRate: v })} decimals={1} />
-        </div>
       </div>
 
       {hasData && (
@@ -221,7 +217,7 @@ export function FireCalculator() {
                 {formatCurrency(toDisplay(adjustedFireNumber), dc)}
               </div>
               <div className="text-xs text-stone-500">
-                today: {formatCurrency(toDisplay(todayFireNumber), dc)} ({withdrawalRate}% SWR)
+                today: {formatCurrency(toDisplay(todayFireNumber), dc)} (4% SWR)
               </div>
             </div>
             <div>
