@@ -63,13 +63,17 @@ export function DashboardPage() {
 
         <Card>
           <div className="text-sm text-stone-400 mb-1">Monthly Cash Flow</div>
-          <div className="text-2xl font-bold font-mono font-mono">
-            <span className={combinedSurplus >= 0 ? 'text-emerald-400' : 'text-rose-400'}>
-              {fmt(combinedSurplus)}
-            </span>
-          </div>
-          <div className="text-xs text-stone-500 font-mono mt-1">
-            Income: {fmt(totalIncome)} &middot; Out: {fmt(totalOutgoings)}
+          <CurrencyDisplay
+            amount={combinedSurplus}
+            currency="AED"
+            fxRates={rates}
+            displayCurrency={dc}
+            size="lg"
+            className={combinedSurplus >= 0 ? 'text-emerald-400' : 'text-rose-400'}
+          />
+          <div className="text-xs text-stone-500 font-mono mt-2">
+            Income: <span className="text-emerald-400">{fmt(totalIncome)}</span>
+            {' − '}Outgoings: <span className="text-rose-400">{fmt(totalOutgoings)}</span>
           </div>
         </Card>
 
