@@ -77,8 +77,8 @@ export default function MortgageModel({ property }) {
             <XAxis dataKey="year" tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 100]} tickFormatter={(v) => `${v}%`} width={40} />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
-            <ReferenceLine y={75} stroke="#ff4d6a" strokeDasharray="3 3" label={{ value: '75%', fill: '#ff4d6a', fontSize: 10 }} />
-            <ReferenceLine y={60} stroke="#00e59b" strokeDasharray="3 3" label={{ value: '60%', fill: '#00e59b', fontSize: 10 }} />
+            <ReferenceLine y={75} stroke="#ff4d6a" strokeDasharray="3 3" label={{ value: '75%', fill: '#ff4d6a', fontSize: 10, position: 'insideTopRight' }} />
+            <ReferenceLine y={60} stroke="#00e59b" strokeDasharray="3 3" label={{ value: '60%', fill: '#00e59b', fontSize: 10, position: 'insideTopRight' }} />
             <Bar dataKey="ltv" radius={[4, 4, 0, 0]} activeBar={{ stroke: '#eef0f6', strokeWidth: 1.5 }}>
               {ltvData.map((entry, i) => (
                 <Cell key={i} fill={entry.fill} />

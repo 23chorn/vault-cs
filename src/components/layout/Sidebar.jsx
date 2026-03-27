@@ -2,7 +2,6 @@ import { useState } from 'react'
 
 const NAV_ITEMS = [
   { id: 'overview', label: 'Overview', icon: '⬡' },
-  { id: 'config', label: 'Configuration', icon: '⚙' },
   { id: 'costs', label: 'Cost Breakdown', icon: '◈' },
   { id: 'mortgage', label: 'Mortgage Model', icon: '◰' },
   { id: 'rates', label: 'Rate Sensitivity', icon: '◎' },
@@ -98,6 +97,24 @@ export default function Sidebar({ activeSection, onNavigate, propertyName }) {
             </button>
           ))}
         </nav>
+
+        {/* Config gear at bottom */}
+        <div className="p-3 border-t border-border">
+          <button
+            onClick={() => handleNav('config')}
+            className={`w-full flex items-center justify-center p-2.5 rounded-lg transition-colors ${
+              activeSection === 'config'
+                ? 'bg-accent-blue/10 text-accent-blue'
+                : 'text-text-muted hover:bg-bg-elevated hover:text-text-primary'
+            }`}
+            title="Configuration"
+          >
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M10 13a3 3 0 100-6 3 3 0 000 6z" />
+              <path d="M17.4 12.6a1.5 1.5 0 00.3 1.65l.05.05a1.82 1.82 0 01-1.29 3.1 1.82 1.82 0 01-1.28-.53l-.06-.05a1.5 1.5 0 00-1.65-.3 1.5 1.5 0 00-.91 1.37v.15a1.82 1.82 0 01-3.64 0v-.08a1.5 1.5 0 00-.98-1.37 1.5 1.5 0 00-1.65.3l-.05.06a1.82 1.82 0 01-2.57-2.57l.05-.06a1.5 1.5 0 00.3-1.65 1.5 1.5 0 00-1.37-.91h-.15a1.82 1.82 0 010-3.64h.08a1.5 1.5 0 001.37-.98 1.5 1.5 0 00-.3-1.65l-.06-.05A1.82 1.82 0 014.7 2.63l.06.05a1.5 1.5 0 001.65.3h.07a1.5 1.5 0 00.91-1.37V1.5a1.82 1.82 0 013.64 0v.08a1.5 1.5 0 00.91 1.37 1.5 1.5 0 001.65-.3l.05-.06a1.82 1.82 0 012.57 2.57l-.05.06a1.5 1.5 0 00-.3 1.65v.07a1.5 1.5 0 001.37.91h.15a1.82 1.82 0 010 3.64h-.08a1.5 1.5 0 00-1.37.91z" />
+            </svg>
+          </button>
+        </div>
       </aside>
     </>
   )
