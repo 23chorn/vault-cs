@@ -18,7 +18,7 @@ export function DashboardPage() {
   const rates = state.meta.fxRates
   const dc = state.meta.displayCurrency
   const fmt = (aed: number) => formatInDisplayCurrency(aed, dc, rates)
-  const { netWorth } = calcNetWorth(state)
+  const { netWorth, totalAssets, totalLiabilities } = calcNetWorth(state)
 
   const p1 = state.people.person1
   const p2 = state.people.person2
@@ -50,8 +50,12 @@ export function DashboardPage() {
         <Card>
           <div className="text-sm text-stone-400 mb-1">Net Worth</div>
           <CurrencyDisplay amount={netWorth} currency="AED" fxRates={rates} displayCurrency={dc} size="lg" />
+          <div className="text-xs text-stone-500 font-mono mt-2">
+            Assets: <span className="text-emerald-400">{fmt(totalAssets)}</span>
+            {' − '}Liabilities: <span className="text-rose-400">{fmt(totalLiabilities)}</span>
+          </div>
           {delta !== null && (
-            <div className={`text-sm font-mono mt-2 ${delta >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+            <div className={`text-sm font-mono mt-1 ${delta >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
               {delta >= 0 ? '+' : ''}{fmt(delta)} vs last snapshot
             </div>
           )}
