@@ -103,7 +103,7 @@ export default function ProjectionModel({ property }) {
       <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6">
         <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider mb-4">Value & Equity Trajectory</h3>
         <ResponsiveContainer width="100%" height={220} className="sm:!h-[300px]">
-          <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+          <ComposedChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
             <XAxis dataKey="year" tick={{ fill: '#8b8fa7', fontSize: 10 }} axisLine={false} tickLine={false} interval={4} />
             <YAxis tick={{ fill: '#8b8fa7', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${(v / 1000).toFixed(0)}k`} width={45} />

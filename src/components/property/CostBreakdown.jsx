@@ -17,7 +17,7 @@ function Row({ label, monthly, annual, indent = false, bold = false, color }) {
 }
 
 export default function CostBreakdown({ property }) {
-  const [showS24, setShowS24] = useState(true)
+  const [showS24, setShowS24] = useState(false)
   const { mortgage, rental, costs, tax } = property
 
   const monthlyMortgage = calcMonthlyMortgage(property)
@@ -71,8 +71,9 @@ export default function CostBreakdown({ property }) {
             </tr>
           </thead>
           <tbody>
-            <Row label="Rental Income" monthly={annualRent / 12} annual={annualRent} bold color="green" />
-            <Row label={`Void adjustment (${rental.voidMonthsPerYear} months)`} monthly={-(rental.monthlyRent * rental.voidMonthsPerYear) / 12} annual={-(rental.monthlyRent * rental.voidMonthsPerYear)} indent color="red" />
+            <Row label="Gross Rental Income" monthly={rental.monthlyRent} annual={rental.monthlyRent * 12} bold color="green" />
+            <Row label={`Void periods (${rental.voidMonthsPerYear} month${rental.voidMonthsPerYear !== 1 ? 's' : ''}/yr)`} monthly={-(rental.monthlyRent * rental.voidMonthsPerYear) / 12} annual={-(rental.monthlyRent * rental.voidMonthsPerYear)} indent />
+            <Row label="Net Rental Income" monthly={annualRent / 12} annual={annualRent} bold />
 
             <tr><td colSpan={3} className="pt-4 pb-1 text-xs text-text-muted uppercase tracking-wider">Deductions</td></tr>
             <Row label={`Management (${costs.managementFeePercent}%)`} monthly={-managementFee / 12} annual={-managementFee} indent />
@@ -118,12 +119,12 @@ export default function CostBreakdown({ property }) {
             </div>
             <div className="flex justify-between gap-2">
               <span className="text-text-secondary">2. Less allowable expenses (NOT mortgage interest)</span>
-              <span className="font-mono text-text-primary shrink-0">-{formatCurrency(totalCosts)}</span>
+              <span className="font-mono text-text-primary shrink-0">{formatCurrency(-totalCosts)}</span>
             </div>
             {tax.claimsPersonalAllowance && (
               <div className="flex justify-between gap-2">
                 <span className="text-text-secondary">3. Less personal allowance</span>
-                <span className="font-mono text-text-primary shrink-0">-{formatCurrency(tax.personalAllowance)}</span>
+                <span className="font-mono text-text-primary shrink-0">{formatCurrency(-tax.personalAllowance)}</span>
               </div>
             )}
             <div className="flex justify-between gap-2 border-t border-border pt-2">
@@ -136,7 +137,7 @@ export default function CostBreakdown({ property }) {
             </div>
             <div className="flex justify-between gap-2">
               <span className="text-text-secondary">5. Less 20% tax credit on mortgage interest ({formatCurrency(mortgageInterest)})</span>
-              <span className="font-mono text-accent-green shrink-0">-{formatCurrency(s24.taxCredit)}</span>
+              <span className="font-mono text-accent-green shrink-0">{formatCurrency(-s24.taxCredit)}</span>
             </div>
             <div className="flex justify-between gap-2 border-t border-border pt-2">
               <span className="text-text-primary font-medium">= Net tax payable</span>

@@ -5,7 +5,7 @@ export function formatCurrency(value, decimals = 0) {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   })
-  return value < 0 ? `-£${formatted}` : `£${formatted}`
+  return value < 0 ? `(£${formatted})` : `£${formatted}`
 }
 
 export function formatPercent(value, decimals = 1) {
